@@ -1,0 +1,3 @@
+tokenizer_classpath: default_tokenizer
+tokenizer_params:
+  tokens: true
