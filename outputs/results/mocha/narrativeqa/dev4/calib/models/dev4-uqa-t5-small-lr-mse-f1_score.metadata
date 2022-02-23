@@ -1,0 +1,2 @@
+model_classpath: logistic.LogisticRegression
+model_hyperparams: {}

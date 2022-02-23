@@ -1,3 +1,0 @@
-model_classpath: betacal.BetaCalibration
-model_hyperparams:
-  parameters: abm
