@@ -2,7 +2,7 @@
 from collections import defaultdict
 from typing import Dict, List, Tuple, Union
 
-from utils_generic import generate_uuid
+from utils_generic import generate_uuid, filter_params
 
 import datasets
 import numpy as np
@@ -42,7 +42,8 @@ def load_dataset(
         loading_fn = datasets.load_dataset
 
     dataset = dataset if isinstance(dataset, (list, tuple)) else (dataset,)
-    return loading_fn(*dataset, split=split, **kwargs)
+    load_fn_kwargs = filter_params(kwargs, loading_fn)
+    return loading_fn(*dataset, split=split, **load_fn_kwargs)
 
 
 def load_local_tsv_dataset(
