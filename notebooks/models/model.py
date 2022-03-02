@@ -61,3 +61,15 @@ class T5Model:
             "batch_size": batch_size,
         }
         raise NotImplementedError
+
+
+class UnifiedQAT5Model(T5Model):
+    def _format_row(self, row, features):
+        question, context = features
+
+        encoding = row[question]
+        if "?" not in encoding:
+            encoding += "?"
+
+        encoding += " \\n " + row[context]
+        return {"encoded": encoding}
