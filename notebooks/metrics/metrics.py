@@ -13,7 +13,7 @@ from . import hf_metrics as hf
 from . import calibration_metrics as calib
 
 
-INT_CONST = 10 ** 6
+INT_CONST = 10**6
 
 
 @dataclass
@@ -193,9 +193,9 @@ class CalibrationMetrics:
     n_bins: int = 20
     frac: float = 0.1
 
-    _calib_errors: list = field(init=False, default_factory=list)
-    _eq_width_errors: list = field(init=False, default_factory=list)
-    _eq_freq_errors: list = field(init=False, default_factory=list)
+    _calib_errors: list = field(init=False, default_factory=dict)
+    _eq_width_errors: list = field(init=False, default_factory=dict)
+    _eq_freq_errors: list = field(init=False, default_factory=dict)
 
     def compute(self, data, cols):
         if isinstance(cols, str):
@@ -213,23 +213,22 @@ class CalibrationMetrics:
             mse = np.mean(calib.sq_error(y_ref, y_other))
             results["mse"].append(mse)
 
-            self._calib_errors = calib.calibration_error(y_ref, y_other)
-            mae = np.mean(np.abs(self._calib_errors))
+            self._calib_errors[col] = calib.calibration_error(y_ref, y_other)
+            mae = np.mean(np.abs(self._calib_errors[col]))
             results["mae"].append(mae)
 
-            results["ce_avg"].append(np.mean(self._calib_errors))
-            results["ce_std"].append(np.std(self._calib_errors))
+            results["ce_avg"].append(np.mean(self._calib_errors[col]))
+            results["ce_std"].append(np.std(self._calib_errors[col]))
 
-            self._eq_width_errors = calib.equal_width_ece_bins(
+            self._eq_width_errors[col] = calib.equal_width_ece_bins(
                 y_other, y_ref, self.n_bins
             )
-            results["ECE_eq_width"].append(np.sum(self._eq_width_errors))
-            results[f"ECE_eq_width_max"].append(np.max(self._eq_width_errors))
+            results["ECE_eq_width"].append(np.sum(self._eq_width_errors[col]))
+            results[f"ECE_eq_width_max"].append(np.max(self._eq_width_errors[col]))
 
-            self._eq_freq_errors = calib.equal_freq_ece(y_other, y_ref, self.frac)
-
-            results["ECE_eq_freq"].append(np.sum(self._eq_freq_errors))
-            results[f"ECE_eq_freq_max"].append(np.max(self._eq_freq_errors))
+            self._eq_freq_errors[col] = calib.equal_freq_ece(y_other, y_ref, self.frac)
+            results["ECE_eq_freq"].append(np.sum(self._eq_freq_errors[col]))
+            results[f"ECE_eq_freq_max"].append(np.max(self._eq_freq_errors[col]))
             results["hyperparams"].append({"n_bins": self.n_bins, "frac": self.frac})
 
         results = pd.DataFrame(results)
