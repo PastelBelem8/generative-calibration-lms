@@ -170,4 +170,10 @@ class GreedyGenerator:
             metadata["preds_raw_scores"] = [
                 skip_tokens(s, 1) for s in metadata["preds_raw_scores"]
             ]
+
+            del results
+            del scores
+            del seq_tokens
+            del greedy_scores
+            del pad_mask
             yield pd.DataFrame(metadata)
