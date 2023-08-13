@@ -19,5 +19,8 @@ class LogisticRegression:
             kwargs.update(p0=self.parameters)
         self.parameters, self._cov = curve_fit(logistic, x, y, **kwargs)
 
-    def predict(self, x):
+    def predict(self, x, threshold=0.5):
+        return (logistic(x, *self.parameters) > threshold).astype(int)
+
+    def predict_proba(self, x):
         return logistic(x, *self.parameters)

@@ -13,6 +13,7 @@ from utils_generic import generate_uuid
 import logging
 import pandas as pd
 import torch
+import torch.nn
 import torch.nn.functional as F
 
 

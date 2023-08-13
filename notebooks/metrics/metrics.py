@@ -126,7 +126,6 @@ class PerformanceMetrics(RowWiseMetric):
         # 2. Multi-label
         if self.metrics_multi_token:
             target_label_token: str = self.token_colname(self.target_multi_label)
-
             token_kwargs = {
                 "predictions": [y_pred_tokens],
                 "references": [args[target_label_token]],
